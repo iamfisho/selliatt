@@ -1,5 +1,5 @@
-const UserModel = require('../models/User');
-const UserRepository = require('../repositories/UserRepository');
+const UserModel = require('../../models/User');
+const UserRepository = require('../../repositories/UserRepository');
 
 class MongoUserRepository extends UserRepository {
   async save(user) {
@@ -14,9 +14,14 @@ class MongoUserRepository extends UserRepository {
   async findAll() {
     return await UserModel.find();
   }
-
+  
   async findByUsername(username) {
     return await UserModel.findOne({ username });
+  }
+  
+  async listActiveUsers() {
+    return await UserModel.find();
+    //return await UserModel.find({ active: true });
   }
 }
 

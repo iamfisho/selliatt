@@ -12,6 +12,10 @@ class UserRepository {
   async findByUsername(username){
     throw new Error('Method not implemented');
   }
+
+  async listActiveUsers(){
+    throw new Error('Method not implemented');
+  }
 }
 
 module.exports = UserRepository;

@@ -1,6 +1,7 @@
 class UserController {
-  constructor(signUpUser) {
+  constructor(signUpUser, activeUsers){
     this.signUpUser = signUpUser;
+    this.activeUsers = activeUsers;
   }
 
   async signup(req, res){
@@ -13,9 +14,19 @@ class UserController {
     }
   }
 
+  async users(req, res){
+    try {
+      const users = await this.activeUsers.execute();
+      res.status(200).json(users);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
+
   get router(){
     const router = require('express').Router();
     router.post('/', this.signup.bind(this));
+    router.get('/', this.users.bind(this));
     return router;
   }
 }
