@@ -19,6 +19,11 @@ const messageSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  senderId: {
+    type: String,
+    default: uuidv4,
+    required: true
+  }
 });
 
 module.exports = mongoose.model('Message', messageSchema);

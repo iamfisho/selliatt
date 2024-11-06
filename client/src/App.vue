@@ -1,30 +1,13 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import InfiniteTab from './components/organisms/InfiniteTab.vue';
 import Login from './components/organisms/Login.vue';
 import store from './store';
-import VueSocketIO from 'vue-socket.io';
-
-const users = computed(() => store.getters['users/activeUsers']);
-const currentUsername = computed(() => store.getters['users/currentUsername']);
-const isLoggedIn = currentUsername.value !== '';
 
 store.dispatch('users/fetchUsers');
-
-const socket = new VueSocketIO({
-  debug: true,
-  connection: 'http://localhost:3000',
-  vuex: {
-    store,
-    actionPrefix: 'SOCKET_',
-    mutationPrefix: 'SOCKET_',
-  },
-});
-
-const messageHandler = () => {
-  const msg = { username: currentUsername.value, text: 'Example' };
-  console.log('Sending message', msg);
-  socket.io.emit('sendMessage', msg);
+const messageHandler = (data) => {
+  const msg = { userId: data.userId, text: data.text, senderId: data.senderId };
+  store.dispatch('messages/sendMessage', msg);
 }
 
 </script>
@@ -32,12 +15,18 @@ const messageHandler = () => {
 <template>
   <div>
     <header>
-      The chatroom
+      {{ currentUsername }}
     </header>
   </div>
-  <InfiniteTab :users="users" v-if="isLoggedIn" :messageHandler="messageHandler"/>
-  <Login v-if="!isLoggedIn"/>
+  <InfiniteTab :users="users" v-if="currentUsername" :messageHandler="messageHandler"/>
+  <Login v-if="!currentUsername"/>
 </template>
+
+<script>
+import { computed } from 'vue';
+const users = computed(() => store.getters['users/activeUsers']);
+const currentUsername = computed(() => store.getters['users/currentUsername']);
+</script>
 
 <style scoped>
 .logo {

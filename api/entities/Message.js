@@ -1,9 +1,9 @@
 class Message {
-  constructor({ userId, text, timestamp = new Date(), messageReceiverId }) {
-    this.messageOwner = userId;
+  constructor({ userId, text, timestamp = new Date(), senderId }) {
+    this.userId = userId;
     this.text = text;
     this.timestamp = timestamp;
-    this.messageReceiver = messageReceiverId;
+    this.senderId = senderId;
   }
 }
 

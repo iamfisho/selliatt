@@ -6,10 +6,12 @@ const cors = require("cors");
 
 const MongoUserRepository = require('./infraesctructure/db/MongoUserRepository');
 const MongoMessageRepository = require('./infraesctructure/db/MongoMessageRepository');
-const SignUpUser = require('./use-cases/SignUpUser');
 const UserController =  require('./controllers/UserController');
 const MessageController = require('./controllers/MessageController');
+
+const SignUpUser = require('./use-cases/SignUpUser');
 const ActiveUsers = require('./use-cases/ActiveUsers');
+const ListMessages = require('./use-cases/ListMessages');
 
 socket = require('./frameworks/socketio/SocketServer');
 
@@ -24,12 +26,17 @@ const userRepository = new MongoUserRepository();
 const messageRepository = new MongoMessageRepository();
 const signUpUser = new SignUpUser(userRepository);
 const activeUsers = new ActiveUsers(userRepository);
+const listMessages = new ListMessages(messageRepository);
 const userController = new UserController(signUpUser, activeUsers);
-const messageController = new MessageController(messageRepository);
+const messageController = new MessageController(messageRepository, listMessages);
 
+app.use(cors({
+  origin: ["http://localhost:5173"], // Specify frontend origin
+  credentials: true // Allow cookies and credentials
+}));
 
-app.use('/user', userController.router);
-app.use('/message', messageController.router);
+app.use('/users', userController.router);
+app.use('/messages', messageController.router);
 
 const io = new Server(server, {
   allowEIO3: true,
@@ -42,10 +49,6 @@ const io = new Server(server, {
 
 const socketGateway = new socket(io,messageRepository);
 socketGateway.start();
-app.use(cors({
-  origin: 'http://localhost:5173', // Specify frontend origin
-  credentials: true // Allow cookies and credentials
-}));
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {

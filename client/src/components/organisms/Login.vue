@@ -1,9 +1,10 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 
 const store = useStore();
 const username = ref('');
+const authError = computed(() => store.getters['users/authError']);
 
 function login() {
   store.dispatch('users/signupUser', username.value);
@@ -14,6 +15,7 @@ function login() {
   <div class="container">
     <input v-model="username" placeholder="username" />
     <button @click="login">Login</button>
+    <p class="error" v-if="authError">{{ authError }}</p>
   </div>
 </template>
 
@@ -33,6 +35,10 @@ function login() {
   button {
     display: block;
     padding: 10px;
+  }
+  .error {
+    color: red;
+    padding-top: 4px;
   }
 }
 </style>

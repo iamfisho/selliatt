@@ -8,11 +8,11 @@ class MongoMessageRepository extends MessageRepository {
     await messageModel.save();
   }
 
-  async listMessages(senderId, receiverId, limit, offset) {
+  async listMessages(userId, senderId, limit, offset) {
     return await MessageModel.find({
       $or: [
-        { senderId, receiverId },
-        { senderId: receiverId, receiverId: senderId }
+        { userId, senderId },
+        { senderId: userId, userId: senderId }
       ]
     }).sort({ createdAt: -1 }).skip(offset).limit(limit);
   }

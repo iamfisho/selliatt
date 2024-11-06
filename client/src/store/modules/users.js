@@ -19,7 +19,7 @@ const actions = {
       const user = await signup(userData);
       commit('setUser', user);
     } catch (error) {
-      commit('setAuthError', error.message || 'Error de registro');
+      commit('setAuthError', error.error || 'Error de registro');
     }
   },
   async fetchUsers({ commit }){
@@ -33,9 +33,9 @@ const actions = {
 };
 
 const mutations = {
-  setUser(state, user){
-    state.userId = user.id;
-    state.username = user.name;
+  setUser(state, data){
+    state.userId = data.userId;
+    state.username = data.username;
   },
   setAuthError(state, error) {
     state.authError = error;

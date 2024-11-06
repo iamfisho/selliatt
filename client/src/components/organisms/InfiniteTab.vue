@@ -10,14 +10,14 @@ defineProps({
 
 const currentUserId = store.getters['users/currentUserId']
 
-const tab = ref('mails')
+const tab = ref('chats')
 const splitterModel = ref(10)
 
 </script>
 
 <template>
   <div>
-    <q-splitter v-model="splitterModel" style="height: 250px">
+    <q-splitter v-model="splitterModel" style="height: 100%">
 
       <template v-slot:before>
         <q-tabs v-model="tab" vertical class="text-teal">

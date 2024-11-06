@@ -8,7 +8,8 @@ class SendMessage {
   async execute(messageData) {
     const message = new Message({
       userId: messageData.userId,
-      text: messageData.text
+      text: messageData.text,
+      senderId: messageData.senderId
     });
     this.messageRepository.save(message);
     return message;
